@@ -56,6 +56,25 @@ check(
 );
 console.log("  ✓ hosted tier stays marked PLANNED / GATEWAY_URL empty");
 
+/* 5. Honesty guard for the two-credential model: the 16-digit unlock code
+   must never be sent as X-API-Key. A leaked API key is rotatable; a leaked
+   unlock code is the account itself, so the dashboard must keep them apart. */
+const appHtml = fs.readFileSync(path.join(ROOT, "app.html"), "utf8");
+const dash = fs.readFileSync(path.join(ROOT, "assets", "dashboard.js"), "utf8");
+check(/UNLOCK CODE/.test(appHtml), "app.html: must label the 16-digit unlock code");
+check(/NOT an API key/i.test(appHtml), "app.html: must state the unlock code is not an API key");
+check(/X-Unlock-Code/.test(dash), "dashboard.js: management calls must use X-Unlock-Code");
+check(/X-API-Key/.test(dash), "dashboard.js: API calls must use X-API-Key");
+check(
+  !/headers\["X-API-Key"\]\s*=\s*unlockCode/.test(dash),
+  "dashboard.js: the unlock code must NEVER be sent as X-API-Key"
+);
+check(
+  !/\.finally\([^)]*currentTarget/.test(dash),
+  "dashboard.js: never read e.currentTarget inside an async .finally() (it is null by then)"
+);
+console.log("  ✓ unlock code and API key stay separate");
+
 if (errors.length) {
   console.error("\n  FAILED:\n" + errors.map((e) => `    ✗ ${e}`).join("\n"));
   process.exit(1);

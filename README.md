@@ -16,7 +16,7 @@ app.html                Hosted dashboard (signup, quota, status, vouchers)
 assets/styles.css       Design system, layout, responsive, reduced-motion
 assets/dashboard.css    Dashboard-specific styles
 assets/app.js           Terminal, connector explorer, copy buttons, reveals
-assets/dashboard.js     Key lifecycle, quota, status and voucher flows
+assets/dashboard.js     Account unlock code, API key lifecycle, quota, status, vouchers
 assets/config.js        Gateway URL + credit costs (deploy-time config)
 assets/favicon.svg      Mark
 assets/banner.jpg       Organization banner (duotone-treated in CSS)
@@ -30,17 +30,25 @@ docker-compose.yml      One-command local serve
 **real client** for the [`core`](https://github.com/apieverything/core) gateway,
 not a mock:
 
-1. `POST /v1/signup` creates a 16-digit key, shown **once** (copy, download
-   `.txt`, mandatory "I saved it" confirmation).
-2. The dashboard reads `GET /v1/usage` (credits, rate limit) and `GET /v1/status`
-   (per-connector health).
-3. `POST /v1/redeem` adds credits from a prepaid voucher. **PayAsYouGo** — no
+Two credentials, kept strictly apart:
+
+1. `POST /v1/signup` creates an account and returns a **16-digit unlock code**,
+   shown **once** (copy, download `.txt`, mandatory "I saved it" confirmation).
+   The UI states explicitly that it is **not** an API key.
+2. Unlocking the account (`POST /v1/unlock` / `X-Unlock-Code`) lets the user
+   create a rotatable **`ae_…` API key**, also shown once. This is what goes in
+   `X-API-Key` and in the curl example.
+3. The dashboard reads `GET /v1/usage` (credits, rate limit, key count),
+   `GET /v1/keys` (sanitized key list), and `GET /v1/status` (per-connector
+   health). Keys can be created, reset (rotated) and revoked from the UI.
+4. `POST /v1/redeem` adds credits from a prepaid voucher. **PayAsYouGo** — no
    subscription, no monthly reset, no recurring payment.
 
-The key stays in the browser (`sessionStorage` by default, optional
-"remember on this device" → `localStorage`). It is never sent anywhere except
-as the `X-API-Key` header to the configured gateway. The gateway stores only
-its SHA-256 hash.
+The unlock code and the current API key stay in the browser (`sessionStorage`
+by default, optional "remember on this device" → `localStorage`). The unlock
+code is sent **only** as `X-Unlock-Code` to management routes; it is never used
+as `X-API-Key`. `scripts/check.js` enforces that separation. The gateway stores
+only SHA-256 hashes of both credentials.
 
 ### Deploy-time configuration
 

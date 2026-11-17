@@ -107,6 +107,41 @@
 .costs tr:last-child td { border-bottom: 0; }
 .costs td:last-child { text-align: right; font: 600 12px var(--mono); color: var(--accent); white-space: nowrap; }
 
+/* two-credential flow: unlock code -> API key */
+.callout {
+  border: 1px solid rgba(240,201,135,.3); background: rgba(240,201,135,.05);
+  color: var(--muted); font-size: .85rem; line-height: 1.6;
+  padding: 14px 16px; border-radius: 8px; margin-bottom: 22px;
+}
+.callout strong { color: var(--amber); }
+.callout--ok { border-color: rgba(110,240,207,.3); background: rgba(110,240,207,.05); }
+.callout--ok strong { color: var(--accent); }
+.callout code, .panel__hint code, .app-lede code {
+  color: var(--text); background: rgba(255,255,255,.06);
+  padding: 1px 5px; border-radius: 3px; font: 500 11px var(--mono);
+}
+.keyreveal__num--long { font-size: clamp(.95rem, 2.2vw, 1.35rem); letter-spacing: .04em; }
+.keyreveal .panel__k em { font-style: normal; color: var(--dim); letter-spacing: 0; text-transform: none; }
+#apiKeyDoneBtn { max-width: 720px; }
+.or {
+  display: flex; align-items: center; gap: 12px; margin: 24px 0 18px;
+  font: 600 9px var(--mono); letter-spacing: .16em; color: var(--dim);
+}
+.or::before, .or::after { content: ""; height: 1px; background: var(--line); flex: 1; }
+
+/* API key management */
+.keyslist { display: grid; margin-bottom: 18px; }
+.keysrow { display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+.keysrow:last-child { border-bottom: 0; }
+.keysrow__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(110,240,207,.5); }
+.keysrow__dot.is-revoked { background: var(--dim); box-shadow: none; }
+.keysrow__main { min-width: 0; }
+.keysrow__name { font: 500 12px var(--mono); color: var(--text); display: block; }
+.keysrow__meta { font: 400 10px var(--mono); color: var(--dim); display: block; margin-top: 4px; word-break: break-all; }
+.keysrow__actions { display: flex; gap: 6px; }
+.keysrow__actions .btn--ghost { padding: 6px 10px; font-size: 10px; }
+.keysactions { display: flex; gap: 10px; flex-wrap: wrap; }
+
 .usagebox { margin-top: 18px; }
 .usagebox pre { margin: 0 0 18px; font-size: 11.5px; line-height: 2; overflow-x: auto; white-space: pre; }
 .usagebox code { color: var(--muted); }
