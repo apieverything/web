@@ -298,6 +298,8 @@ section[id], .finale { scroll-margin-top: 92px; }
 .hosted__list li { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); font-size: .93rem; }
 .hosted__list li span { color: var(--accent); font-weight: 700; flex: none; }
 .hosted__note { font: 400 11px var(--mono); color: var(--dim); border-left: 2px solid var(--line); padding-left: 14px; margin: 0; }
+.hosted__note a { color: var(--accent); border-bottom: 1px solid rgba(110,240,207,.3); }
+.hosted__note a:hover { border-color: var(--accent); }
 .hosted__art { position: relative; height: 320px; display: grid; place-items: center; }
 .keycard {
   width: 330px; height: 200px; border-radius: 16px; padding: 24px 26px;
