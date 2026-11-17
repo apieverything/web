@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-COPY index.html /usr/share/nginx/html/index.html
+COPY index.html app.html /usr/share/nginx/html/
 COPY assets/ /usr/share/nginx/html/assets/
 
 # No external requests, no tracking, no server-side logic.
