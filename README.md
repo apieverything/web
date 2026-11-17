@@ -11,14 +11,48 @@ connectors it documents.
 ## Files
 
 ```
-index.html              Markup and copy
+index.html              Landing page (markup and copy)
+app.html                Hosted dashboard (signup, quota, status, vouchers)
 assets/styles.css       Design system, layout, responsive, reduced-motion
+assets/dashboard.css    Dashboard-specific styles
 assets/app.js           Terminal, connector explorer, copy buttons, reveals
+assets/dashboard.js     Key lifecycle, quota, status and voucher flows
+assets/config.js        Gateway URL + credit costs (deploy-time config)
 assets/favicon.svg      Mark
 assets/banner.jpg       Organization banner (duotone-treated in CSS)
 Dockerfile              nginx:alpine static image
 docker-compose.yml      One-command local serve
 ```
+
+## Hosted dashboard
+
+`index.html` opens with a hero banner linking to `app.html`. The dashboard is a
+**real client** for the [`core`](https://github.com/apieverything/core) gateway,
+not a mock:
+
+1. `POST /v1/signup` creates a 16-digit key, shown **once** (copy, download
+   `.txt`, mandatory "I saved it" confirmation).
+2. The dashboard reads `GET /v1/usage` (credits, rate limit) and `GET /v1/status`
+   (per-connector health).
+3. `POST /v1/redeem` adds credits from a prepaid voucher. **PayAsYouGo** — no
+   subscription, no monthly reset, no recurring payment.
+
+The key stays in the browser (`sessionStorage` by default, optional
+"remember on this device" → `localStorage`). It is never sent anywhere except
+as the `X-API-Key` header to the configured gateway. The gateway stores only
+its SHA-256 hash.
+
+### Deploy-time configuration
+
+`assets/config.js` holds `GATEWAY_URL`. Empty (default) means the hosted
+service is **not launched**: the dashboard shows an honest notice instead of
+faking account creation, and explains how to point it at your own `core`
+instance. Set `GATEWAY_URL` to your deployed gateway to go live. Self-hosters
+can also use `app.html?gateway=http://localhost:9000` or paste a URL in the
+advanced field. `?gateway=none` forces the not-launched state for testing.
+
+Locally served pages auto-detect a `core` gateway on `localhost:9000`, so the
+whole flow is testable without any configuration.
 
 ## Run locally
 
@@ -47,8 +81,11 @@ at `/ (root)`.
 
 - The connector samples are real responses captured from the connectors. They
   are illustrative snapshots, not a live feed.
-- The hosted tier is marked **PLANNED**. No pricing, signup or availability is
-  claimed anywhere on the site until the service actually exists.
+- The hosted tier is marked **PLANNED**. The dashboard's signup/quota flow is
+  real and works against any `core` gateway, but the site claims **no public
+  hosted instance, no pricing and no payment provider** until one exists. With
+  `GATEWAY_URL` empty, `app.html` shows an honest not-launched notice rather
+  than a fake signup.
 - Connector status is taken from `connectors/README.md`. Keep it in sync when a
   connector changes state.
 - The attribution requirement in the footer reflects the MIT + attribution

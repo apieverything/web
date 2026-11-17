@@ -23,6 +23,8 @@
 }
 
 * { box-sizing: border-box; }
+/* Author `display` rules override the UA [hidden] rule — make it explicit. */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 96px; overflow-x: clip; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
@@ -178,7 +180,7 @@ section[id], .finale { scroll-margin-top: 92px; }
 .j-punc { color: var(--dim); }
 
 /* ---------- stats ---------- */
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 90px; background: var(--line-soft); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 44px; background: var(--line-soft); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; }
 .stat { background: var(--bg); padding: 26px 28px; display: flex; flex-direction: column; gap: 4px; }
 .stat strong { font-size: 2.1rem; font-weight: 700; letter-spacing: -.05em; line-height: 1; color: var(--text); }
 .stat__word { font-size: 1.7rem; letter-spacing: -.02em; }
@@ -297,9 +299,50 @@ section[id], .finale { scroll-margin-top: 92px; }
 .hosted__list { list-style: none; margin: 30px 0 24px; padding: 0; display: grid; gap: 11px; }
 .hosted__list li { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); font-size: .93rem; }
 .hosted__list li span { color: var(--accent); font-weight: 700; flex: none; }
-.hosted__note { font: 400 11px var(--mono); color: var(--dim); border-left: 2px solid var(--line); padding-left: 14px; margin: 0; }
+.hosted__note { font: 400 11px var(--mono); color: var(--dim); border-left: 2px solid var(--line); padding-left: 14px; margin: 22px 0 0; line-height: 1.8; }
 .hosted__note a { color: var(--accent); border-bottom: 1px solid rgba(110,240,207,.3); }
 .hosted__note a:hover { border-color: var(--accent); }
+.hosted__note code { font-size: 1em; color: var(--muted); }
+
+/* Hosted hero banner — the primary CTA, visible on the first screen. */
+.hero-cta {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr auto; gap: 3px 20px; align-items: center;
+  margin: 8px 0 56px; padding: 22px 30px; border-radius: 14px;
+  border: 1px solid rgba(110,240,207,.38);
+  background: linear-gradient(105deg, rgba(110,240,207,.11), rgba(122,168,255,.055) 55%, rgba(110,240,207,.02));
+  box-shadow: 0 20px 60px rgba(0,0,0,.35), 0 0 0 1px rgba(110,240,207,.05) inset;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.hero-cta::after {
+  content: ""; position: absolute; right: -80px; top: -120px; width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(110,240,207,.16), transparent 70%); pointer-events: none;
+}
+.hero-cta:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 26px 70px rgba(110,240,207,.16); }
+.hero-cta__badge {
+  grid-column: 1 / -1; justify-self: start;
+  font: 600 9px var(--mono); letter-spacing: .18em; color: var(--accent);
+  border: 1px solid rgba(110,240,207,.35); background: rgba(110,240,207,.07);
+  padding: 4px 9px; border-radius: 4px; margin-bottom: 6px;
+}
+.hero-cta__badge em { font-style: normal; color: var(--dim); }
+.hero-cta__label { grid-column: 1; font-size: clamp(1.1rem, 2.2vw, 1.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.25; }
+.hero-cta__sub { grid-column: 1; font: 500 10px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.hero-cta__arrow { grid-column: 2; grid-row: 2 / 4; font-size: 2rem; color: var(--accent); align-self: center; transition: transform .25s ease; }
+.hero-cta:hover .hero-cta__arrow { transform: translate(4px, -4px); }
+
+.hosted__inline { margin: 26px 0 0; font-size: .95rem; }
+.hosted__inline a { color: var(--accent); border-bottom: 1px solid rgba(110,240,207,.35); padding-bottom: 2px; }
+.hosted__inline a:hover { border-color: var(--accent); }
+
+@media (max-width: 620px) {
+  .hero-cta { padding: 18px 20px; margin: 8px 0 40px; }
+  .hero-cta__arrow { font-size: 1.5rem; }
+}
+@media (max-width: 420px) {
+  .hero-cta { grid-template-columns: 1fr; }
+  .hero-cta__arrow { grid-column: 1; grid-row: auto; justify-self: end; font-size: 1.3rem; }
+}
 .hosted__art { position: relative; height: 320px; display: grid; place-items: center; }
 .keycard {
   width: 330px; height: 200px; border-radius: 16px; padding: 24px 26px;
