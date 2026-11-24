@@ -69,7 +69,7 @@ console.log("  ✓ hosted tier stays marked PLANNED / GATEWAY_URL empty / honest
 
 /* 5. Four connectors including YouTube on landing page + costs */
 check(/data-count="4">4<\/strong>/.test(indexHtml), "index.html: stats must report 4 live connectors");
-check(/data-count="160">160<\/strong>/.test(indexHtml), "index.html: stats must report 160 offline tests");
+check(/data-count="160">160<\/strong>/.test(indexHtml), "index.html: stats must report 170 offline tests");
 check(/Four services\./.test(indexHtml), "index.html: must read 'Four services. One contract.'");
 check(/<button role="tab"[^>]*>youtube<\/button>/.test(indexHtml), "index.html: #terminalTabs must include youtube tab");
 check(/data-conn="youtube"/.test(indexHtml), "index.html: #connectorList must include youtube tab");
@@ -77,7 +77,7 @@ check(/\/v1\/youtube\/@mkbhd\/posts\?limit=2/.test(appJs), "assets/app.js: must 
 check(/innertube_browse/.test(appJs), "assets/app.js: YouTube sample must report innertube_browse strategy");
 check(/YouTube videos \/ search \/ transcript/.test(config), "assets/config.js: COSTS must include YouTube 2-cr entry");
 check(/YouTube videos \/ search \/ transcript/.test(dash), "assets/dashboard.js: fallback COSTS must include YouTube 2-cr entry");
-console.log("  ✓ 4 connectors (Instagram, YouTube, LinkedIn, TikTok) & 160 offline tests");
+console.log("  ✓ 4 connectors (Instagram, YouTube, LinkedIn, TikTok) & 170 offline tests");
 
 /* 6. Honesty guard for the two-credential model: the 16-digit unlock code
    must never be sent as X-API-Key. A leaked API key is rotatable; a leaked
