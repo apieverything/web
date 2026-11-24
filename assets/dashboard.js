@@ -641,7 +641,7 @@
         <div class="invoicebox__actions">
           <button class="btn btn--line btn--block" id="settleSandboxBtn" type="button">Simulate crypto settlement (local)</button>
         </div>`;
-    } else if (!settled && inv.mode === "btcpay") {
+    } else if (!settled && (inv.mode === "nowpayments" || inv.mode === "btcpay" || inv.checkoutUrl)) {
       const safeCheckout = /^https?:\/\//i.test(String(inv.checkoutUrl || "")) ? inv.checkoutUrl : "";
       actionsHtml = `
         <div class="invoicebox__actions">
@@ -727,7 +727,12 @@
       if (info && info.enabled === true && Array.isArray(info.packs) && info.packs.length > 0) {
         currentPaymentMode = info.mode || "sandbox";
         currentPacks = info.packs;
-        packsModeBadge.textContent = currentPaymentMode === "sandbox" ? "SANDBOX · PAY AS YOU GO" : "CRYPTO · PAY AS YOU GO";
+        packsModeBadge.textContent =
+          currentPaymentMode === "sandbox"
+            ? "SANDBOX · PAY AS YOU GO"
+            : currentPaymentMode === "nowpayments"
+              ? "NOWPAYMENTS · PAY AS YOU GO"
+              : "CRYPTO · PAY AS YOU GO";
         noPaymentNotice.hidden = true;
         packsBox.hidden = false;
         renderPackCards();
