@@ -62,6 +62,39 @@
       },
     },
     {
+      cmd: 'curl "localhost:3000/v1/youtube/@mkbhd/posts?limit=2"',
+      out: {
+        handle: "@mkbhd",
+        username: "mkbhd",
+        profile: {
+          channelId: "UCBJycsmduvYEL83R_U4JriQ",
+          fullName: "Marques Brownlee",
+          subscribers: 19800000,
+          videosCount: 1692,
+          views: 4582910440,
+          isVerified: true,
+          source: "innertube_browse",
+        },
+        count: 2,
+        posts: [{
+          url: "https://www.youtube.com/watch?v=dtp6b76pMak",
+          shortcode: "dtp6b76pMak",
+          videoId: "dtp6b76pMak",
+          title: "The Truth About Local Open-Source Models!",
+          userPosted: "mkbhd",
+          views: 2418900,
+          duration: "14:28",
+          durationSeconds: 868,
+          datePosted: "2026-11-18T16:00:00.000Z",
+          photos: ["https://i.ytimg.com/vi/dtp6b76pMak/hqdefault.jpg"],
+          type: "video",
+        }],
+        strategy: "innertube_browse",
+        source: "innertube_browse",
+        hasMore: true,
+      },
+    },
+    {
       cmd: 'curl "localhost:3000/v1/linkedin/jobs/search?keywords=python&location=France&limit=3"',
       out: {
         query: { keywords: "python", location: "France", start: 0 },
@@ -106,15 +139,20 @@
       note: "anon_grid · 200 · ~1.3 s · no session, no proxy",
       json: FRAMES[0].out,
     },
+    youtube: {
+      label: "GET /v1/youtube/@mkbhd/posts?limit=2",
+      note: "innertube_browse · 200 · ~0.6 s · no Google API key",
+      json: FRAMES[1].out,
+    },
     linkedin: {
       label: "GET /v1/linkedin/jobs/search?keywords=python&location=France&limit=3",
       note: "jobs_guest · 200 · ~0.5 s · no personal data",
-      json: FRAMES[1].out,
+      json: FRAMES[2].out,
     },
     tiktok: {
       label: "GET /v1/tiktok/khaby.lame",
       note: "user_detail · 200 · exact counts · no session",
-      json: FRAMES[2].out,
+      json: FRAMES[3].out,
     },
   };
 

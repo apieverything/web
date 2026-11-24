@@ -11,12 +11,12 @@ connectors it documents.
 ## Files
 
 ```
-index.html              Landing page (markup and copy)
-app.html                Hosted dashboard (signup, quota, status, vouchers)
+index.html              Landing page (4 connectors, contract, self-host & charter)
+app.html                Hosted dashboard (signup, keys, live playground, packs, vouchers)
 assets/styles.css       Design system, layout, responsive, reduced-motion
-assets/dashboard.css    Dashboard-specific styles
-assets/app.js           Terminal, connector explorer, copy buttons, reveals
-assets/dashboard.js     Account unlock code, API key lifecycle, quota, status, vouchers
+assets/dashboard.css    Dashboard, live API playground & credit pack styles
+assets/app.js           Terminal, 4-connector explorer, copy buttons, reveals
+assets/dashboard.js     Unlock code, API keys, live playground, PayAsYouGo packs & vouchers
 assets/config.js        Gateway URL + credit costs (deploy-time config)
 assets/favicon.svg      Mark
 assets/banner.jpg       Organization banner (duotone-treated in CSS)
@@ -26,7 +26,8 @@ docker-compose.yml      One-command local serve
 
 ## Hosted dashboard
 
-`index.html` opens with a hero banner linking to `app.html`. The dashboard is a
+`index.html` highlights all four connectors (**Instagram**, **YouTube**, **LinkedIn**,
+**TikTok**) and opens with a hero banner linking to `app.html`. The dashboard is a
 **real client** for the [`core`](https://github.com/apieverything/core) gateway,
 not a mock:
 
@@ -41,8 +42,20 @@ Two credentials, kept strictly apart:
 3. The dashboard reads `GET /v1/usage` (credits, rate limit, key count),
    `GET /v1/keys` (sanitized key list), and `GET /v1/status` (per-connector
    health). Keys can be created, reset (rotated) and revoked from the UI.
-4. `POST /v1/redeem` adds credits from a prepaid voucher. **PayAsYouGo** — no
-   subscription, no monthly reset, no recurring payment.
+4. **Live API Playground** (`TRY AN API CALL`) executes real `GET /v1/*` requests
+   against the configured gateway with `X-API-Key` (blocking 16-digit unlock
+   codes client-side), optional `Cache-Control: no-cache` bypass, live `X-Cache`
+   (`HIT` / `MISS` / `COALESCED` / `BYPASS`) + `X-Credits-Cost` / `X-Charged` /
+   `X-Credits-Remaining` telemetry, syntax-highlighted JSON, and in-place quota
+   bar updates.
+5. **PayAsYouGo Credit Packs & Vouchers**: probes `GET /v1/payments/packs`. When
+   disabled or unreachable, keeps the honest `NO PAYMENT PROVIDER YET` notice.
+   When enabled (`sandbox` or `btcpay`), renders one-time credit packs (`1,000`,
+   `5,000`, `20,000` cr — zero subscription, zero identity), creates decoupled
+   invoices (`POST /v1/payments/checkout`), supports one-click local sandbox
+   settlement (`POST /v1/payments/sandbox/:invoiceId/settle`) or BTCPay invoice
+   polling (`GET /v1/payments/invoices/:invoiceId`), and redeems the minted
+   voucher via `POST /v1/redeem`.
 
 The unlock code and the current API key stay in the browser (`sessionStorage`
 by default, optional "remember on this device" → `localStorage`). The unlock
@@ -103,11 +116,17 @@ at `/ (root)`.
 
 The palette comes from the organization banner: turquoise CRT screens on a
 near-black room. Accent `#6ef0cf`, secondary `#7aa8ff`, background `#06080b`.
-Mono labels, oversized display type, a subtle grid and scanline texture.
+The live terminal is the loud element; everything else stays quiet. Display
+type is plain and oversized (no gradient words), monospace is reserved for
+machine text — commands, routes, data, credentials — and a subtle grid, grain
+and scanline texture carry the CRT identity. Radius and motion follow a small
+hierarchy: one orchestrated hero entrance, gentle view transitions in the
+dashboard, press feedback on buttons, and hover effects gated to fine pointers.
 
 Accessibility: semantic landmarks, a skip link, visible focus states,
 `aria-selected` on all tabs with arrow-key navigation, `prefers-reduced-motion`
-support (animations and auto-cycling disabled), and full mobile layout.
+support (movement and auto-cycling disabled), tabular numerals for counts, and
+a full mobile layout.
 
 ## License
 

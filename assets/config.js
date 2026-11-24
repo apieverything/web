@@ -15,6 +15,7 @@ window.AE_CONFIG = {
   STARTER_CREDITS: 50,
   COSTS: [
     ["Instagram / TikTok posts", 3],
+    ["YouTube videos / search / transcript", 2],
     ["LinkedIn aggregate signals", 2],
     ["LinkedIn people (blocked)", 5],
     ["Profile / job / company metadata", 1],

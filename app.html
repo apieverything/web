@@ -40,7 +40,7 @@
     <section class="view" id="viewIntro">
       <div class="view__head">
         <p class="kicker">YOUR ACCOUNT</p>
-        <h1 class="app-title">One account.<br><span class="grad">No identity.</span></h1>
+        <h1 class="app-title">One account.<br>No identity.</h1>
         <p class="app-lede">No email, no password, no subscription. A <strong>16-digit unlock code</strong> opens your account. Inside it you create <strong>rotatable API keys</strong> — those are what your code actually uses. We store only hashes.</p>
       </div>
 
@@ -76,7 +76,7 @@
           </label>
           <button class="btn btn--line btn--block" id="unlockBtn" type="button">Unlock my account <span aria-hidden="true">↗</span></button>
           <p class="panel__foot" id="unlockError" role="alert" hidden></p>
-          <p class="panel__fine">No identity is collected. Rate-limited to a few accounts per network per hour to prevent abuse. <a href="https://github.com/apieverything/core" target="_blank" rel="noopener noreferrer">Read the code ↗</a></p>
+          <p class="panel__fine">No identity is collected. Rate-limited to a few accounts per network per hour to prevent abuse. <a href="https://github.com/apieverything/core" target="_blank" rel="noopener noreferrer">Read the code <svg class="ext" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5H3.5v9h9V10"/><path d="M9.5 2.5h4v4"/><path d="M13.5 2.5 7.5 8.5"/></svg></a></p>
         </div>
       </div>
     </section>
@@ -85,7 +85,7 @@
     <section class="view" id="viewKey" hidden>
       <div class="view__head">
         <p class="kicker">STEP 01 / SAVE IT</p>
-        <h1 class="app-title">This opens<br><span class="grad">your account.</span></h1>
+        <h1 class="app-title">This opens<br>your account.</h1>
         <p class="app-lede">This is the <strong>only time</strong> you'll see your 16-digit unlock code. Copy it, download it, put it in your password manager. We store only its SHA-256 hash — there is no recovery.</p>
       </div>
 
@@ -118,7 +118,7 @@
     <section class="view" id="viewApiKey" hidden>
       <div class="view__head">
         <p class="kicker">STEP 02 / YOUR API KEY</p>
-        <h1 class="app-title">Use this<br><span class="grad">in your code.</span></h1>
+        <h1 class="app-title">Use this<br>in your code.</h1>
         <p class="app-lede">This is your <strong>API key</strong>. Send it in <code>X-API-Key</code>. Unlike the unlock code, it is disposable: create more, reset it or revoke it from your dashboard without losing your credits or your account.</p>
       </div>
 
@@ -184,36 +184,114 @@
           <p class="panel__foot" id="keysMsg" role="status" hidden></p>
         </div>
 
+        <!-- Live API Playground -->
+        <div class="panel panel--wide playground" id="playgroundPanel">
+          <div class="panel__head-row">
+            <span class="panel__k">LIVE PLAYGROUND <em class="panel__k-sub">· TRY AN API CALL</em></span>
+            <span class="pill pill--ok">X-API-Key · CORS live</span>
+          </div>
+          <p class="panel__hint">Run a real request against the configured gateway and inspect accounting headers, RAM cache state and normalized JSON in place.</p>
+
+          <div class="play-grid">
+            <div class="play-controls">
+              <label class="field">
+                <span>PRESET ENDPOINT</span>
+                <select id="playPreset">
+                  <option value="/v1/instagram/kametolol/posts?limit=2">Instagram — @kametolol posts (3 cr)</option>
+                  <option value="/v1/instagram/kametolol">Instagram — @kametolol profile (1 cr)</option>
+                  <option value="/v1/youtube/@mkbhd/posts?limit=2">YouTube — @mkbhd videos (2 cr)</option>
+                  <option value="/v1/youtube/search?q=open+source&amp;limit=3">YouTube — search videos (2 cr)</option>
+                  <option value="/v1/linkedin/jobs/search?keywords=python&amp;location=France&amp;limit=3">LinkedIn — job search (1 cr)</option>
+                  <option value="/v1/tiktok/khaby.lame">TikTok — @khaby.lame profile (1 cr)</option>
+                  <option value="/v1/usage">Gateway — /v1/usage (0 cr)</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>REQUEST PATH <em>(editable — sent to your configured gateway)</em></span>
+                <input id="playPath" type="text" value="/v1/instagram/kametolol/posts?limit=2" spellcheck="false" autocomplete="off">
+              </label>
+
+              <label class="field">
+                <span>API KEY <em>(<code>X-API-Key</code> — rotatable <code>ae_…</code> key, never your unlock code)</em></span>
+                <input id="playApiKey" type="text" placeholder="ae_paste_or_create_an_api_key…" spellcheck="false" autocomplete="off">
+                <small class="field__hint" id="playKeyHint">Pre-filled when you mint a key in this session.</small>
+              </label>
+
+              <div class="play-actions">
+                <label class="check check--inline">
+                  <input type="checkbox" id="playNoCache">
+                  <span>Bypass cache (<code>Cache-Control: no-cache</code>)</span>
+                </label>
+                <button class="btn btn--primary" id="playSendBtn" type="button">Send request <span aria-hidden="true">→</span></button>
+              </div>
+              <p class="panel__foot" id="playError" role="alert" hidden></p>
+            </div>
+
+            <div class="play-console">
+              <div class="play-bar">
+                <span class="pill" id="playStatusPill">READY</span>
+                <span class="pill" id="playCachePill">CACHE: —</span>
+                <span class="pill" id="playCostPill">0 cr · uncharged</span>
+                <span class="play-latency" id="playLatency">— ms</span>
+                <button class="terminal__copy play-copy" id="playCopyBtn" type="button">Copy JSON</button>
+              </div>
+              <pre class="play-out" id="playOutput" aria-live="polite">{
+  "hint": "Select a preset or edit the path, then click Send request."
+}</pre>
+              <div class="play-foot">
+                <span id="playReqLine">GET /v1/instagram/kametolol/posts?limit=2</span>
+                <span id="playMetaFoot">failed or 4xx/5xx responses cost 0 cr</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Add quota -->
         <div class="panel">
           <span class="panel__k">ADD QUOTA</span>
-          <p class="panel__hint">Redeem a prepaid voucher. No subscription, no recurring payment — you decide when to add credits.</p>
+          <p class="panel__hint">PayAsYouGo credits — no subscription, no calendar expiry, zero identity linked to billing.</p>
+
+          <!-- Revealed automatically when GET /v1/payments/packs reports enabled: true -->
+          <div class="packsbox" id="packsBox" hidden>
+            <div class="packs__head">
+              <span class="payg__badge" id="packsModeBadge">PAY AS YOU GO</span>
+              <span class="packs__sub">Zero subscription · zero identity</span>
+            </div>
+            <div class="packs__grid" id="packsGrid" role="radiogroup" aria-label="Credit packs"></div>
+            <button class="btn btn--primary btn--block" id="buyPackBtn" type="button">Buy pack <span aria-hidden="true">↗</span></button>
+            <div class="invoicebox" id="invoiceBox" hidden></div>
+            <div class="or"><span>OR REDEEM A VOUCHER</span></div>
+          </div>
+
           <label class="field">
             <span>VOUCHER CODE</span>
-            <input id="voucherInput" type="text" placeholder="paste your code" spellcheck="false" autocomplete="off">
+            <input id="voucherInput" type="text" placeholder="paste your code…" spellcheck="false" autocomplete="off">
           </label>
-          <button class="btn btn--primary btn--block" id="redeemBtn" type="button">Add credits</button>
+          <button class="btn btn--line btn--block" id="redeemBtn" type="button">Add credits</button>
           <p class="panel__foot" id="redeemMsg" role="status" hidden></p>
-          <div class="payg payg--tight">
+          <div class="payg payg--tight" id="noPaymentNotice">
             <span class="payg__badge">NO PAYMENT PROVIDER YET</span>
             <p>Voucher codes will be issued by the payment provider once the hosted service launches. The redemption flow is already live in the gateway — you can test it today with a code issued by your own <code>core</code> admin.</p>
           </div>
         </div>
 
-        <!-- API status -->
-        <div class="panel">
-          <span class="panel__k">API STATUS</span>
-          <p class="panel__hint">Live health of every connector behind the gateway.</p>
-          <div class="statuslist" id="statusList"><p class="muted">Checking…</p></div>
-          <p class="panel__fine" id="statusTime"></p>
-        </div>
+        <div class="dash-stack">
+          <!-- API status -->
+          <div class="panel">
+            <span class="panel__k">API STATUS</span>
+            <p class="panel__hint">Live health of every connector behind the gateway.</p>
+            <div class="statuslist" id="statusList"><p class="muted">Checking…</p></div>
+            <p class="panel__fine" id="statusTime"></p>
+          </div>
 
-        <!-- Costs -->
-        <div class="panel">
-          <span class="panel__k">WHAT COSTS WHAT</span>
-          <p class="panel__hint">Weighted by the work done upstream.</p>
-          <table class="costs"><tbody id="costsBody"></tbody></table>
-          <p class="panel__fine">A 429, a 5xx, a 404 or an empty response costs <strong>nothing</strong>.</p>
+          <!-- Costs -->
+          <div class="panel">
+            <span class="panel__k">WHAT COSTS WHAT</span>
+            <p class="panel__hint">Weighted by the work done upstream.</p>
+            <table class="costs"><tbody id="costsBody"></tbody></table>
+            <p class="panel__fine">A 429, a 5xx, a 404 or an empty response costs <strong>nothing</strong>.</p>
+          </div>
         </div>
       </div>
 
@@ -235,7 +313,7 @@
   <div class="wrap foot__bottom">
     <span>© <span id="year">2026</span> API Everything · MIT with attribution</span>
     <span>No cookies · No trackers · Your credentials stay in your browser</span>
-    <a href="index.html">Back to site ↗</a>
+    <a href="index.html">Back to site</a>
   </div>
 </footer>
 
