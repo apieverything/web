@@ -69,7 +69,7 @@ console.log("  ✓ hosted tier stays marked PLANNED / GATEWAY_URL empty / honest
 
 /* 5. Four connectors including YouTube on landing page + costs */
 check(/data-count="4">4<\/strong>/.test(indexHtml), "index.html: stats must report 4 live connectors");
-check(/data-count="160">160<\/strong>/.test(indexHtml), "index.html: stats must report 170 offline tests");
+check(/data-count="170">170<\/strong>/.test(indexHtml), "index.html: stats must report 170 offline tests");
 check(/Four services\./.test(indexHtml), "index.html: must read 'Four services. One contract.'");
 check(/<button role="tab"[^>]*>youtube<\/button>/.test(indexHtml), "index.html: #terminalTabs must include youtube tab");
 check(/data-conn="youtube"/.test(indexHtml), "index.html: #connectorList must include youtube tab");
